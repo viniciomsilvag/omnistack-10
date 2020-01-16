@@ -1,5 +1,6 @@
 const express = require('express');
 const mongoose = require('mongoose');
+const cors = require('cors');
 
 const config = require('../config');
 const routes = require('./routes');
@@ -15,6 +16,7 @@ mongoose
   .then(() => app.emit('connected_db'))
   .catch(e => console.error('ERROR CONNECTING TO DATABASE.'));
 
+app.use(cors());
 app.use(express.json());
 app.use(routes);
 
