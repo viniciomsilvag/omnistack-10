@@ -1,14 +1,20 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
+const http = require('http');
+
+const routes = require('./routes');
+const { setup } = require('./websocket');
 
 const config = require('../config');
-const routes = require('./routes');
 
 const app = express();
+const server = http.Server(app);
+
+setup(server);
 
 mongoose
-  .connect(config.strConnection(), {
+  .connect(config.connection, {
     useCreateIndex: true,
     useNewUrlParser: true,
     useUnifiedTopology: true,
@@ -20,4 +26,4 @@ app.use(cors());
 app.use(express.json());
 app.use(routes);
 
-app.on('connected_db', () => app.listen(3333));
+app.on('connected_db', () => server.listen(config.port));
